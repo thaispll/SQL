@@ -24,3 +24,5 @@ ADD COLUMN endereco VARCHAR(255);
 
 /*Excluir uma tabela*/
 /*DROP TABLE nome_tabela;*/
+
+SELECT * FROM nome_tabela;
