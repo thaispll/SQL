@@ -61,3 +61,93 @@ DELETE FROM Funcionarios;
 SET SQL_SAFE_UPDATES = 0;
 
 SELECT * FROM Funcionarios;
+SELECT * FROM departamentos;
+
+SET SQL_SAFE_UPDATES = 0;
+
+UPDATE departamentos
+SET CodigoFuncionarioGerente = (
+	SELECT Codigo
+	FROM funcionarios
+    WHERE Funcao LIKE '%Gerente%' AND CodigoDepartamento = Departamentos.Codigo    
+);
+
+SELECT * FROM Funcionarios;
+SELECT * FROM Departamentos;
+
+#Listar Nome e Sobrenome Ordenados por Sobrenome
+SELECT 
+	PrimeiroNome AS Nome,
+    UltimoNome AS Sobrenome
+FROM
+	Funcionarios
+ORDER BY
+	UltimoNome ASC;
+
+#Listar Todos os Campos de Funcionários Ordenados por Cidade:
+SELECT * FROM Funcionarios
+ORDER BY Cidade ASC;
+
+#Liste a data de nascimento e o primeiro nome dos funcionários, 
+#ordenados do mais novo para o mais velho.
+SELECT 
+	DataNasci, PrimeiroNome
+FROM
+	Funcionarios
+ORDER BY
+	DataNasci DESC;
+
+#Liste os funcionários em formato de listagem telefônica, 
+#mostrando nome completo e telefone.
+#Forma 1 
+SELECT 
+	IFNULL(
+    	CONCAT(PrimeiroNome, ' ', SegundoNome,' ', UltimoNome),
+		CONCAT(PrimeiroNome, ' ', UltimoNome)
+    ) AS NomeCompleto,
+	Fone AS Telefone
+FROM 
+	Funcionarios
+ORDER BY
+	PrimeiroNome ASC, UltimoNome ASC;
+
+#Forma 2 IF 
+SELECT 
+	IF(
+		SegundoNome IS NULL,
+		CONCAT(PrimeiroNome, ' ', UltimoNome),
+		CONCAT(PrimeiroNome, ' ', SegundoNome,' ', UltimoNome)
+    )AS NomeCompleto,
+	Fone AS Telefone
+FROM 
+	Funcionarios
+ORDER BY
+	PrimeiroNome ASC, UltimoNome ASC;
+
+#Forma 3 CASE
+SELECT
+	CASE
+		WHEN SegundoNome IS NULL THEN CONCAT(PrimeiroNome, ' ', UltimoNome)
+        ELSE CONCAT(PrimeiroNome, ' ', SegundoNome,' ', UltimoNome)
+	END AS NomeCompleto,
+    Fone AS Telefone
+FROM
+	Funcionarios
+ORDER BY
+		PrimeiroNome ASC, UltimoNome ASC;
+#Exiba o nome completo dos funcionários, 
+#o nome do departamento ao qual pertencem e a função de cada um
+
+SELECT 
+	IFNULL(
+    	CONCAT(PrimeiroNome, ' ', SegundoNome,' ', UltimoNome),
+		CONCAT(PrimeiroNome, ' ', UltimoNome)
+    ) AS NomeCompleto,
+	d.Nome AS NomeDepartamento,
+    f.Funcao
+FROM 
+	Funcionarios f
+JOIN 
+	Departamentos d ON f.CodigoDepartamento = d.Codigo
+ORDER BY
+	f.UltimoNome ASC, f.PrimeiroNome ASC;
